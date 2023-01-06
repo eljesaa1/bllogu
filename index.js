@@ -1,3 +1,4 @@
+require('dotenv').config()
 // import modules
 const express = require('express');
 const mongoose = require('mongoose');
@@ -14,12 +15,19 @@ app.use(expressSession({
     saveUninitialized: true
 }));
 // start the server on port 80
-app.listen(80);
+app.listen(process.env.PORT, () => {
+    console.log("Server started")
+});
+
 app.set('view engine', 'ejs');
 app.use('/static', express.static('static'));
 
 // connect to db with the name: blog02
-mongoose.connect('mongodb+srv://lesushjaa:lesa1234@cluster0.eo8vhcz.mongodb.net/blog02');
+mongoose.connect('mongodb+srv://lesushjaa:' + process.env.DB_PASS + 
+    '@cluster0.eo8vhcz.mongodb.net/blog02').then (
+        () => {console.log("DB connected") },
+        err => {console.log("DB not connected") }
+    );
 
 // localhost/
 app.use('/auth', authRouter);
